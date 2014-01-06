@@ -1,0 +1,80 @@
+<!-- social login section -->
+<script type="text/javascript">
+ // Init code
+function init() {
+   AddShoppersWidget.API.Event.bind("sign_in", createAccount);
+};
+
+// Create Account
+function createAccount() {
+    services = ['facebook', 'google', 'linkedin', 'twitter'];
+    var data = AddShoppersWidget.API.User.signed_data();
+    for( var i=0; i < services.length; i++ ) {
+        service = services[i];
+        if (AddShoppersWidget.API.User.signed(service)) {
+            var email = data[service + '_email'];
+            if (service == 'twitter') {
+                alert('popup get email');
+            };
+            if (email) {
+                if (service != 'facebook' && service !='twitter' ) {
+                      var name = data[service + '_firstname'] + ' ' + data[service + '_lastname'];
+                } else {
+                     var name = data[service + '_name'];
+                };
+                name = name.replace(/ /g, '-');
+                //populate signin box
+                var usrpass = "password";
+                document.getElementById('email').value = email;
+                document.getElementById('password1').value = usrpass;
+                document.getElementById('password2').value = usrpass;
+                break;
+            };
+	   };
+    };
+}
+       
+// Bind events
+if (window.addEventListener) {
+    window.addEventListener("load", init, false);
+    } else {
+        document.onreadystatechange = function() {
+         if(document.readyState in {loaded: 1, complete: 1}) {
+             document.onreadystatechange = null;
+              init();
+         }
+    }
+} 
+
+//go to login page on button click
+function goToLogin() {
+    var theurl = location.protocol + '//' + location.host + location.pathname;
+    var dispatch="?dispatch=profiles.add";
+    document.location.href = theurl + dispatch;
+    
+    var key1 = document.getElementsByName('verification_answer')[1]; 
+    key1.focus();
+    key1.select();
+    document.getElementsByName('profiles_register_form')[0].submit();
+}
+</script>
+   
+<!-- social login buttons, comment out ones that you dont want to use -->
+<div class="social-commerce-signin-facebook" data-style="logoandtext" data-size="medium" onclick="goToLogin();"></div>
+<div class="social-commerce-signin-linkedin" data-style="logoandtext" data-size="medium" onclick="goToLogin();"></div>
+<div class="social-commerce-signin-google" data-style="logoandtext" data-size="medium" onclick="goToLogin();"></div>
+<div class="social-commerce-signin-paypal" data-style="logoandtext" data-size="medium" onclick="goToLogin();"></div>
+
+<!-- end addshoppers social sign in buttons -->
+
+
+
+
+
+
+<!-- AddShoppers Standard Widget JS (you can remove this if its not already on the page)-->
+<script type="text/javascript">
+var js = document.createElement('script'); js.type = 'text/javascript'; js.async = true; js.id = 'AddShoppers';
+js.src = ('https:' == document.location.protocol ? 'https://shop.pe/widget/' : 'http://cdn.shop.pe/widget/') + 'widget_async.js#4ec535222aa35f5289000001';
+document.getElementsByTagName("head")[0].appendChild(js);
+</script>
